@@ -7,5 +7,6 @@ This is **NOT** the firmware to actually run the uC. That is (currently) located
 
 Changes to the official Energia 17 to make it work are:
 
--Ethernet library modified. Add a begin_nonblock function which does not wait until Ethernet completes
+-Ethernet library modified. Add a begin_nonblock function which does not wait until Ethernet completes.
+
 -Added a ready() function to determine when the DHCP actually completes. 
