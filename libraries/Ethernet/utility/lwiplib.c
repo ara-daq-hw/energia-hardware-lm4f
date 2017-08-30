@@ -90,6 +90,7 @@ extern void lwIPHostTimerHandler(void);
 #include "lwip/autoip.h"
 #include "lwip/init.h"
 #include "netif/tivaif.h"
+#include "lwip/igmp.h"
 #if !NO_SYS
 #if RTOS_FREERTOS
 #include "FreeRTOS.h"
