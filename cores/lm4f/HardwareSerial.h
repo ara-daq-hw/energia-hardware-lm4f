@@ -61,7 +61,7 @@ class HardwareSerial : public Stream
 	public:
 		HardwareSerial(void);
 		HardwareSerial(unsigned long);
-		void begin(unsigned long);
+		void begin(unsigned long baud, unsigned long parity=0);
 		void setBufferSize(unsigned long, unsigned long);
 		void setModule(unsigned long);
 		void setPins(unsigned long);

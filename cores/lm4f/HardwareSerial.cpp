@@ -238,8 +238,10 @@ HardwareSerial::primeTransmit(unsigned long ulBase)
 // Public Methods //////////////////////////////////////////////////////////////
 
 void
-HardwareSerial::begin(unsigned long baud)
+HardwareSerial::begin(unsigned long baud, unsigned long parity)
 {
+	unsigned int config;
+	
 	baudRate = baud;
     //
     // Initialize the UART.
@@ -252,9 +254,12 @@ HardwareSerial::begin(unsigned long baud)
 
     ROM_GPIOPinTypeUART(g_ulUARTPort[uartModule], g_ulUARTPins[uartModule]);
 
-    ROM_UARTConfigSetExpClk(UART_BASE, F_CPU, baudRate,
-                            (UART_CONFIG_PAR_NONE | UART_CONFIG_STOP_ONE |
-                             UART_CONFIG_WLEN_8));
+	config = UART_CONFIG_STOP_ONE | UART_CONFIG_WLEN_8;
+	if (parity==0) config |= UART_CONFIG_PAR_NONE;
+	else if (parity==1) config |= UART_CONFIG_PAR_ODD;
+	else if (parity==2) config |= UART_CONFIG_PAR_EVEN;
+
+    ROM_UARTConfigSetExpClk(UART_BASE, F_CPU, baudRate,config);
     //
     // Set the UART to interrupt whenever the TX FIFO is almost empty or
     // when any character is received.
