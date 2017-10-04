@@ -317,6 +317,9 @@ tivaif_hwinit(struct netif *psNetif)
 
   /* Device capabilities */
   psNetif->flags = NETIF_FLAG_BROADCAST | NETIF_FLAG_ETHARP | NETIF_FLAG_LINK_UP;
+#ifdef LWIP_IGMP
+  psNetif->flags |= NETIF_FLAG_IGMP;
+#endif
 
   /* Initialize the DMA descriptors. */
   InitDMADescriptors();
