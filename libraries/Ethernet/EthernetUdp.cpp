@@ -41,10 +41,10 @@ uint8_t EthernetUDP::begin(uint16_t port)
 {
 	_port = port;
 	_pcb = udp_new();
+	if (_pcb == NULL) return 0;
 	err_t err = udp_bind(_pcb, IP_ADDR_ANY, port);
 
-	if(err == ERR_USE)
-		return 0;
+	if(err == ERR_USE) return 0;
 
 	udp_recv(_pcb, do_recv, this);
 	return 1;
