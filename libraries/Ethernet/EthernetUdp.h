@@ -22,7 +22,6 @@ private:
 	uint8_t count;
 
 	struct udp_pcb *_pcb;
-	struct pbuf *_p;
 	uint16_t _port;
 	/* IP and port filled in when receiving a packet */
 	IPAddress _remoteIP;
@@ -38,6 +37,8 @@ private:
 	uint16_t _write;
 	static void do_recv(void *arg, struct udp_pcb *upcb, struct pbuf *p, struct ip_addr* addr, uint16_t port);
 	static void do_dns(const char *name, struct ip_addr *ipaddr, void *arg);
+protected:
+	struct pbuf *_p;
 public:
 	EthernetUDP();
 	virtual uint8_t begin(uint16_t);
