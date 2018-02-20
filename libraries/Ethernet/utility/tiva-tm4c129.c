@@ -58,6 +58,10 @@
 #include "netif/ppp_oe.h"
 #include "netif/tivaif.h"
 
+uint32_t tivaTxTimestampLo;
+uint32_t tivaTxTimestampHi;
+bool tivaTxTimestampDone;
+
 /**
  * Sanity Check:  This interface driver will NOT work if the following defines
  * are incorrect.
@@ -346,6 +350,18 @@ tivaif_hwinit(struct netif *psNetif)
                      EMAC_FRMFILTER_PASS_MULTICAST));
 
 #if LWIP_PTPD
+#if LWIP_PTPD_V2
+  // PTPD v2 timestamping.
+  EMACTimestampConfigSet(EMAC0_BASE,
+  						 EMAC_TS_ALL_RX_FRAMES |
+  						 EMAC_TS_PTP_VERSION_2 |
+						 EMAC_TS_DIGITAL_ROLLOVER |
+						 EMAC_TS_ALL_RX_FRAMES |
+						 EMAC_TS_ALL |
+						 EMAC_TS_PROCESS_IPV4_UDP |
+						 EMAC_TS_UPDATE_FINE,
+                         (1000000000 / (25000000 / 2)));						 
+#else
   //
   // Enable timestamping on all received packets.
   //
@@ -361,6 +377,7 @@ tivaif_hwinit(struct netif *psNetif)
                          EMAC_TS_PROCESS_IPV4_UDP | EMAC_TS_ALL |
                          EMAC_TS_PTP_VERSION_1 | EMAC_TS_UPDATE_FINE),
                          (1000000000 / (25000000 / 2)));
+#endif //LWIP_PTPD_V2
   EMACTimestampAddendSet(EMAC0_BASE, 0x80000000);
   EMACTimestampEnable(EMAC0_BASE);
 #endif
@@ -591,7 +608,7 @@ tivaif_transmit(struct netif *psNetif, struct pbuf *p)
   /* Tag the first descriptor as the start of the packet. */
   bFirst = true;
   pDesc->Desc.ui32CtrlStatus = DES0_TX_CTRL_FIRST_SEG;
-
+  if (pBuf->flags & PBUF_FLAG_PTP_TXTIMESTAMP) pDesc->Desc.ui32CtrlStatus |= DES0_TX_CTRL_ENABLE_TS;
   /* Here, we know we can send the packet so write it to the descriptors */
   pBuf = p;
 
@@ -698,6 +715,14 @@ tivaif_process_transmit(tStellarisIF *pIF)
             /* No - we're finished. */
             break;
         }
+
+		if(pDescList->pDescriptors[pDescList->ui32Read].Desc.ui32CtrlStatus &
+		   DES0_TX_STAT_TS_CAPTURED)
+		{
+		   tivaTxTimestampLo = pDescList->pDescriptors[pDescList->ui32Read].Desc.ui32IEEE1588TimeLo;
+		   tivaTxTimestampHi = pDescList->pDescriptors[pDescList->ui32Read].Desc.ui32IEEE1588TimeHi;  	
+		   tivaTxTimestampDone = true;
+		}
 
         /* Does this descriptor have a buffer attached to it? */
         if(pDescList->pDescriptors[pDescList->ui32Read].pBuf)

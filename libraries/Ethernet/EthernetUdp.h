@@ -28,7 +28,9 @@ private:
 	uint16_t _remotePort;
 	IPAddress _destIP;
 	/* pbuf, pcb, IP and port used when acting as a client */
+protected:
 	struct pbuf *_sendTop;
+private:
 	struct udp_pcb *_sendToPcb;
 	IPAddress _sendToIP;
 	uint16_t _sendToPort;

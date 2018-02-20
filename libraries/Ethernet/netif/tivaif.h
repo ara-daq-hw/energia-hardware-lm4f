@@ -45,9 +45,15 @@
 #ifndef __TIVAIF_H__
 #define __TIVAIF_H__
 
+#define PBUF_FLAG_PTP_TXTIMESTAMP 0x80
+
 extern int tivaif_input(struct netif *psNetif);
 extern err_t tivaif_init(struct netif *psNetif);
 extern void tivaif_interrupt(struct netif *netif, uint32_t ui32Status);
+
+extern uint32_t tivaTxTimestampLo;
+extern uint32_t tivaTxTimestampHi;
+extern bool tivaTxTimestampDone;
 
 #if NETIF_DEBUG
 void tivaif_debug_print(struct pbuf *psBuf);
