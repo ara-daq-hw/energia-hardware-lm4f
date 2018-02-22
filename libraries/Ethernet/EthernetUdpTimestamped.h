@@ -10,6 +10,8 @@ class EthernetUDPTimestamped : public EthernetUDP {
 public:
 	uint32_t getSeconds() { return _p->time_s; }
 	uint32_t getNanoseconds() { return _p->time_ns; }
+	uint32_t getTxTimestampHi() { return tivaTxTimestampHi; }
+	uint32_t getTxTimestampLo() { return tivaTxTimestampLo; }
 	// enable or disable transmit timestamping for the current packet
 	// the transmit timestamp comes back as a global variable (yes, horrible)
 	// tivaTxTimestampLo  tivaTxTimestampHi and also sets
