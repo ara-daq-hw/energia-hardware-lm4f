@@ -17,10 +17,12 @@ public:
 	// tivaTxTimestampLo  tivaTxTimestampHi and also sets
 	// tivaTxTimestampDone = true.
 	void setTxTimestamp(bool enable) { 
+		if (_sendTop == NULL) return;
 		if (enable) _sendTop->flags |= PBUF_FLAG_PTP_TXTIMESTAMP; 
 		else _sendTop->flags &= ~PBUF_FLAG_PTP_TXTIMESTAMP;
 	}
 	bool getTxTimestamp() {
+		if (_sendTop == NULL) return false;
 		if (_sendTop->flags & PBUF_FLAG_PTP_TXTIMESTAMP) return true;
 		else return false;
 	}
