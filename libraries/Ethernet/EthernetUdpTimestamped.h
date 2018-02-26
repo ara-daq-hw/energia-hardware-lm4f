@@ -20,6 +20,10 @@ public:
 		if (enable) _sendTop->flags |= PBUF_FLAG_PTP_TXTIMESTAMP; 
 		else _sendTop->flags &= ~PBUF_FLAG_PTP_TXTIMESTAMP;
 	}
+	bool getTxTimestamp() {
+		if (_sendTop->flags & PBUF_FLAG_PTP_TXTIMESTAMP) return true;
+		else return false;
+	}
 };
 
 #endif
