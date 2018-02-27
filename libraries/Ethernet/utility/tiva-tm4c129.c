@@ -60,7 +60,7 @@
 
 uint32_t tivaTxTimestampLo;
 uint32_t tivaTxTimestampHi;
-bool tivaTxTimestampDone;
+volatile bool tivaTxTimestampDone;
 
 /**
  * Sanity Check:  This interface driver will NOT work if the following defines
