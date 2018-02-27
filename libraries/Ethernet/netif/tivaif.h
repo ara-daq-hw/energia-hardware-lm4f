@@ -53,7 +53,7 @@ extern void tivaif_interrupt(struct netif *netif, uint32_t ui32Status);
 
 extern uint32_t tivaTxTimestampLo;
 extern uint32_t tivaTxTimestampHi;
-extern bool tivaTxTimestampDone;
+extern volatile bool tivaTxTimestampDone;
 
 #if NETIF_DEBUG
 void tivaif_debug_print(struct pbuf *psBuf);
