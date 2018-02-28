@@ -608,7 +608,7 @@ tivaif_transmit(struct netif *psNetif, struct pbuf *p)
   /* Tag the first descriptor as the start of the packet. */
   bFirst = true;
   pDesc->Desc.ui32CtrlStatus = DES0_TX_CTRL_FIRST_SEG;
-  if (pBuf->flags & PBUF_FLAG_PTP_TXTIMESTAMP) pDesc->Desc.ui32CtrlStatus |= DES0_TX_CTRL_ENABLE_TS;
+  if (p->flags & PBUF_FLAG_PTP_TXTIMESTAMP) pDesc->Desc.ui32CtrlStatus |= DES0_TX_CTRL_ENABLE_TS;
   /* Here, we know we can send the packet so write it to the descriptors */
   pBuf = p;
 
