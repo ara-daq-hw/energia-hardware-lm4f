@@ -58,6 +58,9 @@
 #include "netif/ppp_oe.h"
 #include "netif/tivaif.h"
 
+// debugging
+#include "Serial.h"
+
 uint32_t tivaTxTimestampLo;
 uint32_t tivaTxTimestampHi;
 volatile bool tivaTxTimestampDone;
@@ -608,7 +611,12 @@ tivaif_transmit(struct netif *psNetif, struct pbuf *p)
   /* Tag the first descriptor as the start of the packet. */
   bFirst = true;
   pDesc->Desc.ui32CtrlStatus = DES0_TX_CTRL_FIRST_SEG;
-  if (p->flags & PBUF_FLAG_PTP_TXTIMESTAMP) pDesc->Desc.ui32CtrlStatus |= DES0_TX_CTRL_ENABLE_TS;
+  if (p->flags & PBUF_FLAG_PTP_TXTIMESTAMP) {
+	  Serial.println("PTP: setting TX timestamp request");	  
+	  pDesc->Desc.ui32CtrlStatus |= DES0_TX_CTRL_ENABLE_TS;
+	  Serial.print("PTP: ui32NumChained = ");
+	  Serial.println(ui32NumChained);
+  }
   /* Here, we know we can send the packet so write it to the descriptors */
   pBuf = p;
 
